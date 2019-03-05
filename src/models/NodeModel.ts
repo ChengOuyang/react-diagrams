@@ -1,16 +1,10 @@
-import { BaseEvent } from "../BaseEntity";
 import { BaseModel, BaseModelListener } from "./BaseModel";
-import { LinkModel, LinkModelListener } from "./LinkModel";
 import { PortModel } from "./PortModel";
 import * as _ from "lodash";
 import { DiagramEngine } from "../DiagramEngine";
 import { DiagramModel } from "./DiagramModel";
 
-export interface NodeModelListener extends BaseModelListener {
-	positionChanged?(event: BaseEvent<NodeModel>): void;
-}
-
-export class NodeModel<T extends NodeModelListener = NodeModelListener> extends BaseModel<DiagramModel, T> {
+export class NodeModel extends BaseModel<DiagramModel, BaseModelListener> {
 	x: number;
 	y: number;
 	extras: any;
@@ -41,12 +35,6 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 		});
 		this.x = x;
 		this.y = y;
-	}
-
-	positionChanged() {
-		this.iterateListeners(
-			(listener: NodeModelListener, event) => listener.positionChanged && listener.positionChanged(event)
-		);
 	}
 
 	getSelectedEntities() {

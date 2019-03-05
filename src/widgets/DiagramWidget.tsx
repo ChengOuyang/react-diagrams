@@ -255,10 +255,8 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 					model.model.x = diagramModel.getGridPosition(model.initialX + amountX / amountZoom);
 					model.model.y = diagramModel.getGridPosition(model.initialY + amountY / amountZoom);
 
+					// update port coordinates as well
 					if (model.model instanceof NodeModel) {
-						model.model.positionChanged();
-
-						// update port coordinates as well
 						_.forEach(model.model.getPorts(), port => {
 							const portCoords = this.props.diagramEngine.getPortCoords(port);
 							port.updateCoords(portCoords);
@@ -422,7 +420,6 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 		diagramEngine.setMaxNumberPointsPerLink(this.props.maxNumberPointsPerLink);
 		diagramEngine.setSmartRoutingStatus(this.props.smartRouting);
 		var diagramModel = diagramEngine.getDiagramModel();
-
 		return (
 			<div
 				{...this.getProps()}
@@ -446,8 +443,8 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 							scrollDelta /= 3;
 						} else {
 							scrollDelta /= 60;
-						}
-						if (diagramModel.getZoomLevel() + scrollDelta > 10) {
+                        }
+						if (diagramModel.getZoomLevel() + scrollDelta > 0) {
 							diagramModel.setZoomLevel(diagramModel.getZoomLevel() + scrollDelta);
 						}
 
@@ -477,7 +474,6 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 					}
 				}}
 				onMouseDown={event => {
-					if (event.nativeEvent.which === 3) return;
 					this.setState({ ...this.state, wasMoved: false });
 
 					diagramEngine.clearRepaintEntities();

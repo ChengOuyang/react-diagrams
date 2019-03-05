@@ -22,7 +22,7 @@ export class LinkLayerWidget extends BaseWidget<LinkLayerProps, LinkLayerState> 
 	}
 
 	render() {
-		var diagramModel = this.props.diagramEngine.getDiagramModel();
+        var diagramModel = this.props.diagramEngine.getDiagramModel();
 		return (
 			<svg
 				{...this.getProps()}
