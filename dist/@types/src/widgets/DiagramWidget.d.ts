@@ -30,7 +30,6 @@ export interface DiagramState {
  */
 export declare class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
     static defaultProps: DiagramProps;
-    private _listenWheel;
     onKeyUpPointer: (this: Window, ev: KeyboardEvent) => void;
     constructor(props: DiagramProps);
     componentWillUnmount(): void;
@@ -51,6 +50,7 @@ export declare class DiagramWidget extends BaseWidget<DiagramProps, DiagramState
     onMouseMove(event: any): void;
     onKeyUp(event: any): void;
     onMouseUp(event: any): void;
+    onWheel(event: any): void;
     drawSelectionBox(): JSX.Element;
     render(): JSX.Element;
 }
