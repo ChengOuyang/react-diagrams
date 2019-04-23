@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { DefaultLinkWidget } from "../widgets/DefaultLinkWidget";
 import { DiagramEngine } from "../../DiagramEngine";
 import { AbstractLinkFactory } from "../../factories/AbstractLinkFactory";

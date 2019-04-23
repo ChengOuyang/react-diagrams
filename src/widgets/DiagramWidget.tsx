@@ -425,54 +425,99 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 				{...this.getProps()}
 				ref={ref => {
 					if (ref) {
-						this.props.diagramEngine.setCanvas(ref);
+                        this.props.diagramEngine.setCanvas(ref);
+                        ref.addEventListener('mousewheel', event => {
+                            if (this.props.allowCanvasZoom) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                const oldZoomFactor = diagramModel.getZoomLevel() / 100;
+                                let scrollDelta = this.props.inverseZoom ? -event.deltaY : event.deltaY;
+                                //check if it is pinch gesture
+                                if (event.ctrlKey && scrollDelta % 1 !== 0) {
+                                    /*Chrome and Firefox sends wheel event with deltaY that
+                        have fractional part, also `ctrlKey` prop of the event is true
+                        though ctrl isn't pressed
+                      */
+                                    scrollDelta /= 3;
+                                } else {
+                                    scrollDelta /= 60;
+                                }
+                                if (diagramModel.getZoomLevel() + scrollDelta > 0) {
+                                    diagramModel.setZoomLevel(diagramModel.getZoomLevel() + scrollDelta);
+                                }
+        
+                                const zoomFactor = diagramModel.getZoomLevel() / 100;
+        
+                                const boundingRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+                                const clientWidth = boundingRect.width;
+                                const clientHeight = boundingRect.height;
+                                // compute difference between rect before and after scroll
+                                const widthDiff = clientWidth * zoomFactor - clientWidth * oldZoomFactor;
+                                const heightDiff = clientHeight * zoomFactor - clientHeight * oldZoomFactor;
+                                // compute mouse coords relative to canvas
+                                const clientX = event.clientX - boundingRect.left;
+                                const clientY = event.clientY - boundingRect.top;
+        
+                                // compute width and height increment factor
+                                const xFactor = (clientX - diagramModel.getOffsetX()) / oldZoomFactor / clientWidth;
+                                const yFactor = (clientY - diagramModel.getOffsetY()) / oldZoomFactor / clientHeight;
+        
+                                diagramModel.setOffset(
+                                    diagramModel.getOffsetX() - widthDiff * xFactor,
+                                    diagramModel.getOffsetY() - heightDiff * yFactor
+                                );
+        
+                                diagramEngine.enableRepaintEntities([]);
+                                this.forceUpdate();
+                            }
+                        },{ passive: true});
 					}
 				}}
-				onWheel={event => {
-					if (this.props.allowCanvasZoom) {
-						event.preventDefault();
-						event.stopPropagation();
-						const oldZoomFactor = diagramModel.getZoomLevel() / 100;
-						let scrollDelta = this.props.inverseZoom ? -event.deltaY : event.deltaY;
-						//check if it is pinch gesture
-						if (event.ctrlKey && scrollDelta % 1 !== 0) {
-							/*Chrome and Firefox sends wheel event with deltaY that
-                have fractional part, also `ctrlKey` prop of the event is true
-                though ctrl isn't pressed
-              */
-							scrollDelta /= 3;
-						} else {
-							scrollDelta /= 60;
-                        }
-						if (diagramModel.getZoomLevel() + scrollDelta > 0) {
-							diagramModel.setZoomLevel(diagramModel.getZoomLevel() + scrollDelta);
-						}
+			// 	onWheel={event => {
+			// 		if (this.props.allowCanvasZoom) {
+			// 			event.preventDefault();
+			// 			event.stopPropagation();
+			// 			const oldZoomFactor = diagramModel.getZoomLevel() / 100;
+			// 			let scrollDelta = this.props.inverseZoom ? -event.deltaY : event.deltaY;
+			// 			//check if it is pinch gesture
+			// 			if (event.ctrlKey && scrollDelta % 1 !== 0) {
+			// 				/*Chrome and Firefox sends wheel event with deltaY that
+            //     have fractional part, also `ctrlKey` prop of the event is true
+            //     though ctrl isn't pressed
+            //   */
+			// 				scrollDelta /= 3;
+			// 			} else {
+			// 				scrollDelta /= 60;
+            //             }
+			// 			if (diagramModel.getZoomLevel() + scrollDelta > 0) {
+			// 				diagramModel.setZoomLevel(diagramModel.getZoomLevel() + scrollDelta);
+			// 			}
 
-						const zoomFactor = diagramModel.getZoomLevel() / 100;
+			// 			const zoomFactor = diagramModel.getZoomLevel() / 100;
 
-						const boundingRect = event.currentTarget.getBoundingClientRect();
-						const clientWidth = boundingRect.width;
-						const clientHeight = boundingRect.height;
-						// compute difference between rect before and after scroll
-						const widthDiff = clientWidth * zoomFactor - clientWidth * oldZoomFactor;
-						const heightDiff = clientHeight * zoomFactor - clientHeight * oldZoomFactor;
-						// compute mouse coords relative to canvas
-						const clientX = event.clientX - boundingRect.left;
-						const clientY = event.clientY - boundingRect.top;
+			// 			const boundingRect = event.currentTarget.getBoundingClientRect();
+			// 			const clientWidth = boundingRect.width;
+			// 			const clientHeight = boundingRect.height;
+			// 			// compute difference between rect before and after scroll
+			// 			const widthDiff = clientWidth * zoomFactor - clientWidth * oldZoomFactor;
+			// 			const heightDiff = clientHeight * zoomFactor - clientHeight * oldZoomFactor;
+			// 			// compute mouse coords relative to canvas
+			// 			const clientX = event.clientX - boundingRect.left;
+			// 			const clientY = event.clientY - boundingRect.top;
 
-						// compute width and height increment factor
-						const xFactor = (clientX - diagramModel.getOffsetX()) / oldZoomFactor / clientWidth;
-						const yFactor = (clientY - diagramModel.getOffsetY()) / oldZoomFactor / clientHeight;
+			// 			// compute width and height increment factor
+			// 			const xFactor = (clientX - diagramModel.getOffsetX()) / oldZoomFactor / clientWidth;
+			// 			const yFactor = (clientY - diagramModel.getOffsetY()) / oldZoomFactor / clientHeight;
 
-						diagramModel.setOffset(
-							diagramModel.getOffsetX() - widthDiff * xFactor,
-							diagramModel.getOffsetY() - heightDiff * yFactor
-						);
+			// 			diagramModel.setOffset(
+			// 				diagramModel.getOffsetX() - widthDiff * xFactor,
+			// 				diagramModel.getOffsetY() - heightDiff * yFactor
+			// 			);
 
-						diagramEngine.enableRepaintEntities([]);
-						this.forceUpdate();
-					}
-				}}
+			// 			diagramEngine.enableRepaintEntities([]);
+			// 			this.forceUpdate();
+			// 		}
+			// 	}}
 				onMouseDown={event => {
 					this.setState({ ...this.state, wasMoved: false });
 

@@ -45,7 +45,7 @@ export declare class NodeModel extends BaseModel<DiagramModel, BaseModelListener
     };
     removePort(port: PortModel): void;
     addPort<T extends PortModel>(port: T): T;
-    updateDimensions({width, height}: {
+    updateDimensions({ width, height }: {
         width: number;
         height: number;
     }): void;

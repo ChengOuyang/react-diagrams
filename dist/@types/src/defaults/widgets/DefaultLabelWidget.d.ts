@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { DefaultLabelModel } from "../models/DefaultLabelModel";
 import { BaseWidget, BaseWidgetProps } from "../../widgets/BaseWidget";
 export interface DefaultLabelWidgetProps extends BaseWidgetProps {

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { BaseEntity, BaseListener } from "./BaseEntity";
 import { DiagramModel } from "./models/DiagramModel";
 import { BaseModel, BaseModelListener } from "./models/BaseModel";

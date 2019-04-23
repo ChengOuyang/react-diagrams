@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { DefaultNodeModel } from "../models/DefaultNodeModel";
 import { DiagramEngine } from "../../DiagramEngine";
 import { BaseWidget, BaseWidgetProps } from "../../widgets/BaseWidget";

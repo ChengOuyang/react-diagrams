@@ -36,7 +36,7 @@ export declare class PortModel extends BaseModel<NodeModel, BaseModelListener> {
         [id: string]: LinkModel;
     };
     createLinkModel(): LinkModel | null;
-    updateCoords({x, y, width, height}: {
+    updateCoords({ x, y, width, height }: {
         x: number;
         y: number;
         width: number;

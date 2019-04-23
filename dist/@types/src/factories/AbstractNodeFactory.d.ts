@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { NodeModel } from "../models/NodeModel";
 import { DiagramEngine } from "../DiagramEngine";
 import { AbstractFactory } from "./AbstractFactory";

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { DiagramEngine } from "../DiagramEngine";
 import { BaseAction } from "../actions/BaseAction";
 import { BaseModel, BaseModelListener } from "../models/BaseModel";
