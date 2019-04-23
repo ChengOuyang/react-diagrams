@@ -6699,11 +6699,11 @@ var DiagramWidget = /** @class */ (function (_super) {
     __extends(DiagramWidget, _super);
     function DiagramWidget(props) {
         var _this = _super.call(this, "srd-diagram", props) || this;
+        _this._listenWheel = false;
         _this.onKeyUpPointer = null;
         _this.onMouseMove = _this.onMouseMove.bind(_this);
         _this.onMouseUp = _this.onMouseUp.bind(_this);
         _this.state = {
-            listenWheel: false,
             action: null,
             wasMoved: false,
             renderedNodes: false,
@@ -7028,7 +7028,7 @@ var DiagramWidget = /** @class */ (function (_super) {
         return (React.createElement("div", __assign({}, this.getProps(), { ref: function (ref) {
                 if (ref) {
                     _this.props.diagramEngine.setCanvas(ref);
-                    !_this.state.listenWheel && ref.addEventListener('mousewheel', function (event) {
+                    !_this._listenWheel && ref.addEventListener('mousewheel', function (event) {
                         if (_this.props.allowCanvasZoom) {
                             event.preventDefault();
                             event.stopPropagation();
@@ -7066,7 +7066,8 @@ var DiagramWidget = /** @class */ (function (_super) {
                             _this.forceUpdate();
                         }
                     }, { passive: false });
-                    _this.setState({ listenWheel: true });
+                    // this.setState({listenWheel: true})
+                    _this._listenWheel = true;
                     // this.state.listenWheel = true;
                 }
             }, 

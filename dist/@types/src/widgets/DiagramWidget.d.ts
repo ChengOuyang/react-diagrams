@@ -19,7 +19,6 @@ export interface DiagramProps extends BaseWidgetProps {
 }
 export interface DiagramState {
     action: BaseAction | null;
-    listenWheel: boolean;
     wasMoved: boolean;
     renderedNodes: boolean;
     windowListener: any;
@@ -31,6 +30,7 @@ export interface DiagramState {
  */
 export declare class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
     static defaultProps: DiagramProps;
+    private _listenWheel;
     onKeyUpPointer: (this: Window, ev: KeyboardEvent) => void;
     constructor(props: DiagramProps);
     componentWillUnmount(): void;

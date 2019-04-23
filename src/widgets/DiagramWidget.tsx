@@ -36,7 +36,6 @@ export interface DiagramProps extends BaseWidgetProps {
 
 export interface DiagramState {
     action: BaseAction | null;
-    listenWheel: boolean;
     wasMoved: boolean;
 	renderedNodes: boolean;
 	windowListener: any;
@@ -57,16 +56,17 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 		maxNumberPointsPerLink: Infinity, // backwards compatible default
 		smartRouting: false,
 		deleteKeys: [46, 8]
-	};
+    };
+    
+    private _listenWheel:boolean = false;
 
 	onKeyUpPointer: (this: Window, ev: KeyboardEvent) => void = null;
 
 	constructor(props: DiagramProps) {
         super("srd-diagram", props);
 		this.onMouseMove = this.onMouseMove.bind(this);
-		this.onMouseUp = this.onMouseUp.bind(this);
+        this.onMouseUp = this.onMouseUp.bind(this);
 		this.state = {
-            listenWheel: false,
 			action: null,
 			wasMoved: false,
 			renderedNodes: false,
@@ -428,7 +428,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 				ref={ref => {
 					if (ref) {
                         this.props.diagramEngine.setCanvas(ref);
-                        !this.state.listenWheel && ref.addEventListener('mousewheel', event => {
+                        !this._listenWheel && ref.addEventListener('mousewheel', event => {
                             if (this.props.allowCanvasZoom) {
                                 event.preventDefault();
                                 event.stopPropagation();
@@ -473,7 +473,8 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
                                 this.forceUpdate();
                             }
                         },{ passive: false});
-                        this.setState({listenWheel: true})
+                        // this.setState({listenWheel: true})
+                        this._listenWheel = true
                         // this.state.listenWheel = true;
 					}
 				}}
