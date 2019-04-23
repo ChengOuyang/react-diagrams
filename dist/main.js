@@ -6703,6 +6703,7 @@ var DiagramWidget = /** @class */ (function (_super) {
         _this.onMouseMove = _this.onMouseMove.bind(_this);
         _this.onMouseUp = _this.onMouseUp.bind(_this);
         _this.state = {
+            listenWheel: false,
             action: null,
             wasMoved: false,
             renderedNodes: false,
@@ -7027,7 +7028,7 @@ var DiagramWidget = /** @class */ (function (_super) {
         return (React.createElement("div", __assign({}, this.getProps(), { ref: function (ref) {
                 if (ref) {
                     _this.props.diagramEngine.setCanvas(ref);
-                    ref.addEventListener('mousewheel', function (event) {
+                    !_this.state.listenWheel && ref.addEventListener('mousewheel', function (event) {
                         if (_this.props.allowCanvasZoom) {
                             event.preventDefault();
                             event.stopPropagation();
@@ -7064,7 +7065,9 @@ var DiagramWidget = /** @class */ (function (_super) {
                             diagramEngine.enableRepaintEntities([]);
                             _this.forceUpdate();
                         }
-                    }, { passive: true });
+                    }, { passive: false });
+                    _this.setState({ listenWheel: true });
+                    // this.state.listenWheel = true;
                 }
             }, 
             // 	onWheel={event => {

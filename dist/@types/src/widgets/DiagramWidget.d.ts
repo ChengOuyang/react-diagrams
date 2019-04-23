@@ -19,6 +19,7 @@ export interface DiagramProps extends BaseWidgetProps {
 }
 export interface DiagramState {
     action: BaseAction | null;
+    listenWheel: boolean;
     wasMoved: boolean;
     renderedNodes: boolean;
     windowListener: any;

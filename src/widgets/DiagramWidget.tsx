@@ -35,8 +35,9 @@ export interface DiagramProps extends BaseWidgetProps {
 }
 
 export interface DiagramState {
-	action: BaseAction | null;
-	wasMoved: boolean;
+    action: BaseAction | null;
+    listenWheel: boolean;
+    wasMoved: boolean;
 	renderedNodes: boolean;
 	windowListener: any;
 	diagramEngineListener: any;
@@ -61,10 +62,11 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 	onKeyUpPointer: (this: Window, ev: KeyboardEvent) => void = null;
 
 	constructor(props: DiagramProps) {
-		super("srd-diagram", props);
+        super("srd-diagram", props);
 		this.onMouseMove = this.onMouseMove.bind(this);
 		this.onMouseUp = this.onMouseUp.bind(this);
 		this.state = {
+            listenWheel: false,
 			action: null,
 			wasMoved: false,
 			renderedNodes: false,
@@ -426,7 +428,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 				ref={ref => {
 					if (ref) {
                         this.props.diagramEngine.setCanvas(ref);
-                        ref.addEventListener('mousewheel', event => {
+                        !this.state.listenWheel && ref.addEventListener('mousewheel', event => {
                             if (this.props.allowCanvasZoom) {
                                 event.preventDefault();
                                 event.stopPropagation();
@@ -470,7 +472,9 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
                                 diagramEngine.enableRepaintEntities([]);
                                 this.forceUpdate();
                             }
-                        },{ passive: true});
+                        },{ passive: false});
+                        this.setState({listenWheel: true})
+                        // this.state.listenWheel = true;
 					}
 				}}
 			// 	onWheel={event => {
